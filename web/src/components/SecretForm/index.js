@@ -17,7 +17,7 @@ class SecretForm extends Component {
 
   updateField(field, value) {
     this.setState({ [field]: value }, () => {
-      const isValid = this.state.message !== '';
+      const isValid = this.state.secret !== '';
       this.setState({ isValid });
     });
   }
