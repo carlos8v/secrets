@@ -1,0 +1,10 @@
+.not__found__container {
+  position: absolute;
+  top: 42px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

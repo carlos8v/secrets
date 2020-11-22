@@ -1,0 +1,28 @@
+.secrets__count__container {
+  max-width: 242px;
+  width: 100%;
+  background: rgb(36, 37, 38);
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  padding: 15px 30px;
+  height: 100px;
+  align-self: center;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.secrets__count__title {
+  color: rgb(184, 187, 191);
+  font-size: 18px;
+  text-align: center;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(58, 59, 60);
+}
+
+.secrets__count {
+  color: rgb(45, 136, 255);
+  font-size: 28px;
+  font-weight: 700;
+}
