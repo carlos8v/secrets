@@ -1,4 +1,5 @@
 const db = require('../database/connection');
+const secret_key = 'example_secret_key';
 
 module.exports = {
   async index(req, res) {
@@ -12,7 +13,7 @@ module.exports = {
   async find(req, res) {
     const { id } = req.params;
     
-    const [ secret ] = await db('secrets').where(({ id })).select();
+    const [ secret ] = await db('secrets').where({ id }).select();
 
     return res.json(secret);
   },
@@ -37,4 +38,29 @@ module.exports = {
       });
     }
   },
+  async destroy(req, res) {
+    const { access_key } = req.headers;
+    if (access_key !== secret_key) {
+      return res.status(405).json({
+        error: 'User do not have permition for this request'
+      });
+    }
+
+    const { id } = req.params;
+    const trx = await db.transaction();
+
+    try {
+      await trx('secrets').where({ id }).del();
+
+      await trx.commit();
+
+      return res.status(200).send();
+
+    } catch (error) {
+      trx.rollback();
+      res.status(400).json({
+        error: 'Unexpected error while deleting secret',
+      });
+    }
+  }
 };
