@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import './style.css';
 
-import { SecretForm, MenuHeader } from '../../components'
+import { SecretForm, MenuHeader } from '../../components';
 
 import { createSecret } from '../../services/dataAPI';
 
@@ -11,7 +11,7 @@ class NewSecret extends Component {
     super();
     this.state = {
       shouldRedirect: false,
-    }
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -26,7 +26,7 @@ class NewSecret extends Component {
   render() {
     const { shouldRedirect } = this.state;
     if (shouldRedirect) {
-      return <Redirect to="/" />
+      return <Redirect to="/" />;
     }
 
     return (

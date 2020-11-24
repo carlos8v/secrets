@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { NotFound } from './components';
@@ -6,7 +6,7 @@ import { HomePage, NewSecret, SecretDetails } from './pages';
 
 class App extends Component {
   render() {
-    return(
+    return (
       <div className="App">
         <Router>
           <Switch>
@@ -14,7 +14,7 @@ class App extends Component {
             <Route exact path="/secret/new" component={NewSecret} />
             <Route exact path="/secret/:id" component={SecretDetails} />
             <Route component={NotFound} />
-        </Switch>
+          </Switch>
         </Router>
       </div>
     );

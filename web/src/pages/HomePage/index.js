@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import './style.css';
 
-import { SecretCard, SecretsCount, MenuHeader, Loading } from '../../components';
+import {
+  SecretCard,
+  SecretsCount,
+  MenuHeader,
+  Loading,
+} from '../../components';
 
 import { getSecrets } from '../../services/dataAPI';
 
@@ -20,7 +25,7 @@ class HomePage extends Component {
   }
 
   fetchSecrets() {
-    getSecrets().then((secrets) => this.setState({secrets, loading: false }))
+    getSecrets().then((secrets) => this.setState({ secrets, loading: false }));
   }
 
   render() {
@@ -30,10 +35,14 @@ class HomePage extends Component {
         <MenuHeader path={this.props.match.path} />
         <main className="secrets__container">
           <section className="secrets__content">
-            {loading ? (<Loading />) : (
+            {loading ? (
+              <Loading />
+            ) : (
               <>
                 <SecretsCount />
-                {secrets.map((secret) => <SecretCard key={secret.id} secret={secret} />)}
+                {secrets.map((secret) => (
+                  <SecretCard key={secret.id} secret={secret} />
+                ))}
               </>
             )}
           </section>
