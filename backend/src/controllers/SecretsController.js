@@ -1,5 +1,4 @@
 const db = require('../database/connection');
-const secret_key = 'example_secret_key';
 
 module.exports = {
   async index(req, res) {
@@ -40,7 +39,7 @@ module.exports = {
   },
   async destroy(req, res) {
     const { access_key } = req.headers;
-    if (access_key !== secret_key) {
+    if (access_key !== process.env.SECRET_KEY) {
       return res.status(405).json({
         error: 'User do not have permition for this request'
       });
