@@ -2,7 +2,12 @@ const db = require('../database/connection');
 
 module.exports = {
   async index(req, res) {
-    const secrets = await db.select().table('secrets').orderBy('created_at', 'desc');
+    const { page = 1 } = req.query;
+    const max_per_page = 5;
+    const secrets = await db.select().table('secrets')
+      .limit(max_per_page)
+      .offset((page - 1) * max_per_page)
+      .orderBy('created_at', 'desc');
     return res.json(secrets);
   },
   async count(req, res) {
