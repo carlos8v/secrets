@@ -17,6 +17,10 @@ class NewSecret extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    socket.stopCheckingForNewSecrets();
+  }
+
   handleSubmit(secret) {
     if (secret.name === '') {
       secret.name = `Anônimo${parseInt(Math.random() * 100000)}`;

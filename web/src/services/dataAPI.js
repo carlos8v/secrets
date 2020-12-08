@@ -1,6 +1,6 @@
 import api from './api';
 
-export const getSecrets = async (page = 2) => {
+export const getSecrets = async (page = 1) => {
   const response = await api.get('/secrets', {
     params: {
       page,
@@ -19,7 +19,7 @@ export const createSecret = async (secret) => {
   return response.data;
 }
 
-export const getTotalSecrets = async () => {
-  const { data: { total } } = await api.get('/secrets/total');
-  return total;
+export const getPagination = async () => {
+  const { data: { total, lastPage } } = await api.get('/secrets/pages');
+  return { total, lastPage };
 }

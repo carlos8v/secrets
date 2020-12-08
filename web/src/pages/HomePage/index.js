@@ -9,7 +9,7 @@ import {
 } from '../../components';
 
 import * as socket from '../../services/socket';
-import { getSecrets, getTotalSecrets } from '../../services/dataAPI';
+import { getSecrets, getPagination } from '../../services/dataAPI';
 
 class HomePage extends Component {
   constructor() {
@@ -19,7 +19,8 @@ class HomePage extends Component {
       secrets: [],
       loading: true,
       page: 1,
-      totalSecrets: 1,
+      total: 1,
+      lastPage: 1,
     };
 
     this.observer = createRef();
@@ -33,57 +34,57 @@ class HomePage extends Component {
       });
       if (node) this.observer.current.observe(node);
     };
-
-    this.fetchSecrets = this.fetchSecrets.bind(this);
-    this.nextPage = this.nextPage.bind(this);
-    this.fetchSocketSecret = this.fetchSocketSecret.bind(this);
   }
 
   componentDidMount() {
-    this.initialize();
-  }
-
-  componentDidUpdate() {
-    socket.stopCheckingForNewSecrets();
-    socket.checkForNewSecrets((socketSecret) => {
-      this.fetchSocketSecret(socketSecret);
-    });
+    this.updatePagination(this.fetchSecrets);
   }
 
   componentWillUnmount() {
     socket.stopCheckingForNewSecrets();
   }
 
-  initialize() {
-    getTotalSecrets().then(totalSecrets => {
+  updatePagination(callback) {
+    getPagination().then(({ total, lastPage }) => {
       this.setState(
-        { totalSecrets },
-        this.fetchSecrets,
+        { total, lastPage },
+        callback,
       )
     });
   }
 
   fetchSocketSecret(socketSecret) {
-    this.setState(({ secrets: previousSecrets, totalSecrets}) => ({
-      secrets: [socketSecret, ...previousSecrets],
-      totalSecrets: totalSecrets + 1,
-    }))
-  }
-
-  fetchSecrets() {
-    const { page } = this.state;
-    getSecrets(page).then((secrets) => {
-      this.setState(({ secrets: previousSecrets }) => ({
-        secrets: [...previousSecrets, ...secrets],
-        loading: false,
+    this.updatePagination(() => {
+      this.setState(({ secrets: previousSecrets}) => ({
+        secrets: [socketSecret, ...previousSecrets],
       }));
     });
   }
 
+  fetchSecrets() {
+    const { page } = this.state;
+    const unique = (unique, item) =>
+      unique.find(({ id }) => id === item.id) ? unique : [...unique, item];
+
+    getSecrets(page).then(({ data: secrets }) => {
+      this.setState(
+        ({ secrets: previousSecrets }) => ({
+          secrets: [...previousSecrets, ...secrets].reduce(unique, []),
+          loading: false,
+        }),
+        () => {
+          socket.stopCheckingForNewSecrets();
+          socket.checkForNewSecrets((socketSecret) => {
+            this.fetchSocketSecret(socketSecret);
+          })
+        },
+      );
+    });
+  }
+
   nextPage() {
-    const { page, totalSecrets } = this.state;
-    const max_per_page = 5;
-    if (totalSecrets > page * max_per_page) {
+    const { page, lastPage } = this.state;
+    if (page < lastPage) {
       this.setState(
         ({ page: previousPage }) => ({ page: previousPage + 1}),
         this.fetchSecrets,
@@ -92,7 +93,7 @@ class HomePage extends Component {
   }
 
   render() {
-    const { secrets, loading, totalSecrets } = this.state;
+    const { secrets, loading, total } = this.state;
     return (
       <>
         <MenuHeader path={this.props.match.path} />
@@ -102,7 +103,7 @@ class HomePage extends Component {
               <Loading />
             ) : (
               <>
-                <SecretsCount totalSecrets={totalSecrets}/>
+                <SecretsCount total={total}/>
                 {secrets.map((secret, index) => (
                     <SecretCard
                       key={secret.id}
