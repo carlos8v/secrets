@@ -1,4 +1,5 @@
 const knex = require('knex');
+const { attachPaginate } = require('knex-paginate');
 const path = require('path');
 
 const db = knex({
@@ -8,5 +9,7 @@ const db = knex({
   },
   useNullAsDefault: true,
 });
+
+attachPaginate();
 
 module.exports = db;

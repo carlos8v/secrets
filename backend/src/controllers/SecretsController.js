@@ -1,18 +1,18 @@
 const db = require('../database/connection');
+const max_per_page = 5;
 
 module.exports = {
   async index(req, res) {
     const { page = 1 } = req.query;
-    const max_per_page = 5;
     const secrets = await db.select().table('secrets')
-      .limit(max_per_page)
-      .offset((page - 1) * max_per_page)
-      .orderBy('created_at', 'desc');
+      .orderBy('created_at', 'desc')
+      .paginate({ perPage: max_per_page, currentPage: parseInt(page), isLengthAware: true });
     return res.status(200).json(secrets);
   },
   async count(req, res) {
-    const secrets = await db.select().table('secrets');
-    return res.json({ total : secrets.length });
+    const secrets = await db.select().table('secrets')
+      .paginate({ perPage: max_per_page, currentPage: 1, isLengthAware: true });
+    return res.json(secrets.pagination);
   },
   async find(req, res) {
     const { id } = req.params;
