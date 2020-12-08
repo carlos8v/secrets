@@ -8,7 +8,7 @@ module.exports = {
       .limit(max_per_page)
       .offset((page - 1) * max_per_page)
       .orderBy('created_at', 'desc');
-    return res.json(secrets);
+    return res.status(200).json(secrets);
   },
   async count(req, res) {
     const secrets = await db.select().table('secrets');
@@ -19,7 +19,7 @@ module.exports = {
     
     const [ secret ] = await db('secrets').where({ id }).select();
 
-    return res.json(secret);
+    return res.status(200).json(secret);
   },
   async create(req, res) {
     const { name, secret } = req.body;
@@ -34,7 +34,9 @@ module.exports = {
 
       await trx.commit();
 
-      return res.status(201).send();
+      const [ createdSecret ] = await db.select().table('secrets').orderBy('created_at', 'desc');
+
+      return res.status(201).json(createdSecret);
     } catch (e) {
       trx.rollback();
       res.status(400).json({
@@ -45,8 +47,8 @@ module.exports = {
   async destroy(req, res) {
     const { access_key } = req.headers;
     if (access_key !== process.env.SECRET_KEY) {
-      return res.status(405).json({
-        error: 'User do not have permition for this request'
+      return res.status(401).json({
+        error: 'User does not have permition for this request'
       });
     }
 
