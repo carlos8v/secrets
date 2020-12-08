@@ -4,7 +4,17 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { NotFound } from './components';
 import { HomePage, NewSecret, SecretDetails } from './pages';
 
+import * as socket from './services/socket';
+
 class App extends Component {
+  componentDidMount() {
+    socket.connect();
+  }
+
+  componentWillUnmount() {
+    socket.disconnect();
+  }
+
   render() {
     return (
       <div className="App">

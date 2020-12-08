@@ -4,6 +4,7 @@ import './style.css';
 
 import { SecretForm, MenuHeader } from '../../components';
 
+import * as socket from '../../services/socket';
 import { createSecret } from '../../services/dataAPI';
 
 class NewSecret extends Component {
@@ -20,7 +21,11 @@ class NewSecret extends Component {
     if (secret.name === '') {
       secret.name = `Anônimo${parseInt(Math.random() * 100000)}`;
     }
-    createSecret(secret).then(() => this.setState({ shouldRedirect: true }));
+
+    createSecret(secret).then((newSecret) => {
+      socket.sendNewSecret(newSecret);
+      this.setState({ shouldRedirect: true });
+    });
   }
 
   render() {

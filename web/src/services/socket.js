@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const socket = io(`http://${process.env.REACT_APP_SERVER_IP}:3333`, {
+const socket = io(process.env.REACT_APP_SERVER_IP || 'http://localhost:3333', {
   autoConnect: false,
 });
 
@@ -8,9 +8,17 @@ function connect() {
   socket.connect();
 }
 
-function checkForNewSecrets() {
+function disconnect() {
+  socket.disconnect();
+}
+
+function stopCheckingForNewSecrets() {
+  socket.off('newSecret');
+}
+
+function checkForNewSecrets(callback) {
   socket.on('newSecret', (newSecret) => {
-    console.log(newSecret);
+    callback(newSecret);
   })
 }
 
@@ -20,6 +28,8 @@ function sendNewSecret(secret) {
 
 export {
   connect,
+  disconnect,
   checkForNewSecrets,
+  stopCheckingForNewSecrets,
   sendNewSecret,
 }

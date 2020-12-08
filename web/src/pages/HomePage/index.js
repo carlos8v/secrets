@@ -8,6 +8,7 @@ import {
   Loading,
 } from '../../components';
 
+import * as socket from '../../services/socket';
 import { getSecrets, getTotalSecrets } from '../../services/dataAPI';
 
 class HomePage extends Component {
@@ -35,10 +36,22 @@ class HomePage extends Component {
 
     this.fetchSecrets = this.fetchSecrets.bind(this);
     this.nextPage = this.nextPage.bind(this);
+    this.fetchSocketSecret = this.fetchSocketSecret.bind(this);
   }
 
   componentDidMount() {
     this.initialize();
+  }
+
+  componentDidUpdate() {
+    socket.stopCheckingForNewSecrets();
+    socket.checkForNewSecrets((socketSecret) => {
+      this.fetchSocketSecret(socketSecret);
+    });
+  }
+
+  componentWillUnmount() {
+    socket.stopCheckingForNewSecrets();
   }
 
   initialize() {
@@ -48,6 +61,13 @@ class HomePage extends Component {
         this.fetchSecrets,
       )
     });
+  }
+
+  fetchSocketSecret(socketSecret) {
+    this.setState(({ secrets: previousSecrets, totalSecrets}) => ({
+      secrets: [socketSecret, ...previousSecrets],
+      totalSecrets: totalSecrets + 1,
+    }))
   }
 
   fetchSecrets() {
