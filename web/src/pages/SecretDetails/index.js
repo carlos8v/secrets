@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './style.css';
 
-import { MenuHeader, SecretCard, Loading, NotFound } from '../../components';
+import { SecretCard, Loading, NotFound } from '../../components';
 
 import { getSecret } from '../../services/dataAPI';
 
@@ -30,7 +30,6 @@ class SecretDetails extends Component {
     const { loading, secret } = this.state;
     return(
       <>
-        <MenuHeader path={this.props.match.path} />
         {loading ? (<Loading />) : (
           <section className="secret__details">
             {secret ? <SecretCard secret={secret} /> : <NotFound />}

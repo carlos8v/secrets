@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import './style.css';
 
-import { SecretForm, MenuHeader } from '../../components';
+import { SecretForm } from '../../components';
 
 import * as socket from '../../services/socket';
 import { createSecret } from '../../services/dataAPI';
@@ -39,12 +39,9 @@ class NewSecret extends Component {
     }
 
     return (
-      <>
-        <MenuHeader path={this.props.match.path} />
-        <section className="secret__form__container">
-          <SecretForm onSubmit={this.handleSubmit} />
-        </section>
-      </>
+      <section className="secret__form__container">
+        <SecretForm onSubmit={this.handleSubmit} />
+      </section>
     );
   }
 }

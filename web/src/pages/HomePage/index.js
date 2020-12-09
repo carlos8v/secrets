@@ -4,7 +4,6 @@ import './style.css';
 import {
   SecretCard,
   SecretsCount,
-  MenuHeader,
   Loading,
 } from '../../components';
 
@@ -95,27 +94,24 @@ class HomePage extends Component {
   render() {
     const { secrets, loading, total } = this.state;
     return (
-      <>
-        <MenuHeader path={this.props.match.path} />
-        <main className="secrets__container">
-          <section className="secrets__content">
-            {loading ? (
-              <Loading />
-            ) : (
-              <>
-                <SecretsCount total={total}/>
-                {secrets.map((secret, index) => (
-                    <SecretCard
-                      key={secret.id}
-                      secret={secret}
-                      onRef={secrets.length === index + 1 ? this.lastSecret : null}
-                    />
-                ))}
-              </>
-            )}
-          </section>
-        </main>
-      </>
+      <main className="secrets__container">
+        <section className="secrets__content">
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <SecretsCount total={total} />
+              {secrets.map((secret, index) => (
+                  <SecretCard
+                    key={secret.id}
+                    secret={secret}
+                    onRef={secrets.length === index + 1 ? this.lastSecret : null}
+                  />
+              ))}
+            </>
+          )}
+        </section>
+      </main>
     );
   }
 }
