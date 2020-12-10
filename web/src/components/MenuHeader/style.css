@@ -40,6 +40,6 @@
   border-top-right-radius: 4px;
 }
 
-.header__content--active a {
+.header__content--active p {
   color: rgb(45, 136, 255);
 }

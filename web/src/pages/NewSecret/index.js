@@ -39,9 +39,9 @@ class NewSecret extends Component {
     }
 
     return (
-      <section className="secret__form__container">
+      <main className="secret__form__container">
         <SecretForm onSubmit={this.handleSubmit} />
-      </section>
+      </main>
     );
   }
 }
