@@ -1,0 +1,8 @@
+{
+  "short_name": "Secrets",
+  "name": "O Secrets ajuda-o a desabafar enquanto mantém sua privacidade",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2D88FF",
+  "background_color": "#18191A"
+}
